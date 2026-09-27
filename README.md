@@ -1,173 +1,172 @@
 # NLP Stance Detection — Saturdays AI Monterrey 2020
 
-> **Portfolio case study:** classical NLP and machine-learning experimentation for classifying the relationship between a news headline and an article body.
+> **Portfolio case study:** classical NLP experimentation, model comparison, and a modern zero-cost implementation for classifying the relationship between a news headline and an article body.
 
-This repository contains my final NLP project from **Saturdays AI Monterrey, 4th Edition — Cycle 1 (2020)**. I have preserved the original notebooks as historical evidence of the work and added this portfolio-oriented documentation in 2026 to make the project easier to understand, review, and discuss in technical interviews.
+This repository contains my final NLP project from **Saturdays AI Monterrey, 4th Edition — Cycle 1 (2020)**. The original notebooks are preserved as historical evidence of the work, while the 2026 additions turn the project into a reproducible, cloud-agnostic showcase that can run locally without API keys or paid infrastructure.
 
-## Executive summary
+## What the model predicts
 
-The project explores a four-class stance-detection problem:
+Given a **headline** and a **news article body**, classify their relationship as:
 
 - **agree**
 - **disagree**
 - **discuss**
 - **unrelated**
 
-The workflow combines text preprocessing, TF-IDF feature engineering, supervised machine learning, model comparison, hyperparameter-search experiments, and a neural-network prototype.
+This is a **stance-classification** task, not automated fact checking. A predicted stance does not determine whether a claim is true.
 
-### Why this project is useful in my portfolio
+## Run the modernized demo for free
 
-It demonstrates hands-on experience with the full ML experimentation loop:
+```bash
+git clone https://github.com/StavroK/MtySaturdayAI2020.git
+cd MtySaturdayAI2020
+pip install -r requirements.txt
+streamlit run app.py
+```
 
-**data → preprocessing → feature engineering → model training → tuning → evaluation → comparison**
+On first use, the app can train the modernized TF-IDF + Logistic Regression baseline directly from the repository data. The trained artifact stays on your machine.
 
-It also provides a useful contrast with modern GenAI systems: before retrieval-augmented generation and LLM agents became mainstream, this project addressed semantic relationship classification using interpretable classical NLP pipelines.
+**Operating cost:** $0  
+**Cloud account required:** No  
+**API key required:** No
 
----
-
-## Problem
-
-Given a **headline** and a **news article body**, predict the stance of the article relative to the headline.
-
-This is more demanding than simple topic classification because the model must reason about the relationship between two pieces of text rather than classify one document in isolation.
-
-## Data flow
+## Architecture
 
 ```mermaid
 flowchart LR
-    A[Headline + Article Body] --> B[Cleaning / Normalization]
-    B --> C[Token & Text Processing]
-    C --> D[TF-IDF Features]
-    D --> E1[Logistic Regression]
-    D --> E2[Random Forest]
-    D --> E3[Gradient Boosting]
-    D --> E4[MLP Prototype]
-    E1 --> F[Evaluation]
-    E2 --> F
-    E3 --> F
-    E4 --> F
-    F --> G[Model Comparison]
+    A[Headline + Article Body] --> B[Text Pipeline]
+    B --> C[TF-IDF + n-grams]
+    C --> D[Logistic Regression]
+    D --> E[Stance + class probabilities]
+    E --> F[Local Streamlit UI]
 ```
 
-## Models explored
+The historical notebooks also explore Random Forest, Gradient Boosting, and a one-hidden-layer neural-network prototype.
 
-| Model | Repository artifact | What it demonstrates |
-|---|---|---|
-| Ridge / L2 Logistic Regression | `Ridge_Logistic_Regression.ipynb` | Linear baseline, multiclass classification, regularization, hyperparameter search |
-| Random Forest | `Random_Forrest.ipynb` | Ensemble learning and nonlinear decision boundaries |
-| Gradient Boosting | `Gradient_Boosting_Machine.ipynb` | Boosted ensemble experimentation and tuning |
-| One-hidden-layer MLP | `MLP_one_hiden_layer.ipynb` | Early neural-network experimentation with TensorFlow-era APIs |
-| Data understanding & standardization | `Understand and Standarize Examples.ipynb` | Data preparation, class encoding, text cleanup, TF-IDF generation, feature inspection |
-
-## Feature engineering
-
-The preprocessing notebook includes:
-
-- class encoding for the four stance labels;
-- headline/article-body handling;
-- text normalization;
-- TF-IDF vectorization;
-- unigram and bigram features;
-- train/test splitting;
-- exploratory feature analysis with chi-square statistics;
-- serialization of intermediate artifacts for downstream model experiments.
-
-One saved experiment shows a TF-IDF matrix of approximately **42k training rows × 300 features** and **7.5k test rows × 300 features**.
-
-## Model evaluation approach
-
-The notebooks use or prepare:
-
-- train/test accuracy;
-- classification reports;
-- confusion matrices;
-- randomized hyperparameter search;
-- grid-search refinement;
-- reproducible random seeds.
-
-The repository intentionally retains the original notebook outputs, including interrupted searches and legacy-code errors. These are useful evidence of the actual experimental process, but they also mean the project should **not** be represented as a production-ready package in its current form.
-
----
-
-## Repository structure
+## Modernized project structure
 
 ```text
 .
-├── Understand and Standarize Examples.ipynb
-├── Ridge_Logistic_Regression.ipynb
-├── Random_Forrest.ipynb
-├── Gradient_Boosting_Machine.ipynb
-├── MLP_one_hiden_layer.ipynb
-├── train_bodies.csv
-├── train_stances.csv
-├── test_bodies.csv
-├── test_stances_unlabeled.csv
-├── decks/
-│   └── 2020_Mty_Saturdays_Project_BKaramanosvDEMODAY.pptx
-└── docs/
-    ├── modernization-roadmap.md
-    └── model-card.md
+├── app.py
+├── src/
+│   ├── train_baseline.py
+│   └── predict.py
+├── tests/
+│   └── test_pipeline.py
+├── artifacts/
+│   └── .gitkeep
+├── docs/
+│   ├── index.html
+│   ├── modernization-roadmap.md
+│   └── model-card.md
+├── .github/workflows/
+│   ├── ci.yml
+│   └── pages.yml
+├── requirements.txt
+├── original notebooks...
+└── original data...
 ```
 
-## Technology used in the original project
+## What the original project demonstrates
 
-- Python
-- Jupyter / Google Colab
-- pandas / NumPy
-- scikit-learn
-- NLTK
-- TF-IDF / n-grams
-- TensorFlow 1.x-era APIs
-- matplotlib / seaborn
+The 2020 workflow covers:
 
-## Engineering observations
+- text preprocessing and normalization;
+- class encoding;
+- headline/article-body handling;
+- TF-IDF vectorization;
+- unigram and bigram features;
+- train/test splitting;
+- chi-square feature inspection;
+- Logistic Regression;
+- Random Forest;
+- Gradient Boosting;
+- neural-network experimentation;
+- randomized search and grid search;
+- classification reports and confusion matrices.
 
-This repository was created as a learning project in 2020. Several implementation details are now dated:
+One saved preprocessing experiment produced approximately **42k training rows × 300 TF-IDF features** and **7.5k test rows × 300 features**.
 
-1. The MLP notebook uses TensorFlow APIs such as `tf.contrib` and placeholders that are incompatible with current TensorFlow releases.
-2. Some hyperparameter-search cells were interrupted or saved without final output.
-3. Data and notebooks are stored at the repository root instead of being separated into `data/`, `notebooks/`, and `src/`.
-4. The original project does not pin a fully reproducible environment.
-5. Accuracy alone is not sufficient for an imbalanced four-class problem; macro-F1, per-class recall, and confusion analysis should be first-class metrics.
-6. There is no automated test or CI pipeline.
+## What was modernized in 2026
 
-These limitations are documented rather than hidden because they make the modernization path—and the engineering decisions behind it—clear.
+Rather than rewriting the historical notebooks, the project now adds a clean modern baseline:
 
-## 2026 modernization direction
+- scikit-learn `Pipeline` to keep preprocessing and prediction together;
+- TF-IDF with unigram/bigram features;
+- class-balanced Logistic Regression;
+- stratified train/test splitting;
+- macro-F1, weighted-F1, accuracy, per-class metrics, and confusion matrix;
+- persisted local model artifact;
+- command-line inference;
+- local Streamlit interface;
+- automated unit tests;
+- GitHub Actions CI;
+- static portfolio page prepared for GitHub Pages;
+- model card and modernization roadmap.
 
-A production-quality refresh would:
+## Models explored
 
-- rebuild preprocessing as a tested Python package;
-- use a `Pipeline` / `ColumnTransformer` workflow to prevent train-test leakage;
-- report macro-F1, weighted-F1, per-class recall, and confusion matrices;
-- establish a majority-class and linear baseline before more complex models;
-- replace the TensorFlow 1.x prototype with modern Keras or PyTorch;
-- add a transformer baseline for comparison;
-- add ML experiment tracking and deterministic configuration;
-- package inference behind a small API;
-- add CI tests for preprocessing and inference;
-- add model and data cards describing limitations and intended use.
+| Model | Artifact | Purpose |
+|---|---|---|
+| Logistic Regression | `Ridge_Logistic_Regression.ipynb` + `src/train_baseline.py` | Interpretable linear baseline and reproducible modern implementation |
+| Random Forest | `Random_Forrest.ipynb` | Nonlinear ensemble comparison |
+| Gradient Boosting | `Gradient_Boosting_Machine.ipynb` | Boosted ensemble comparison |
+| One-hidden-layer MLP | `MLP_one_hiden_layer.ipynb` | Historical neural-network experiment |
+| Data preparation | `Understand and Standarize Examples.ipynb` | Text cleanup, TF-IDF generation, encoding, and feature inspection |
 
-See **[docs/modernization-roadmap.md](docs/modernization-roadmap.md)** for the proposed technical roadmap.
+## Historical technical debt
 
-## What I would discuss in an interview
+The original notebooks were created in 2020 and intentionally remain untouched. Important limitations include:
 
-This project gives me a concrete example for discussing:
+1. The MLP uses TensorFlow 1.x-era APIs such as `tf.contrib` and placeholders.
+2. Some hyperparameter-search cells were interrupted or saved without final results.
+3. The notebook-era workflow was not packaged as reusable application code.
+4. The original environment was not fully pinned.
+5. Some evaluations emphasized accuracy despite the four-class imbalance.
 
-- how to turn raw text into ML-ready features;
-- why model baselines matter;
-- how to compare linear, ensemble, and neural approaches;
-- the impact of class imbalance on evaluation;
-- the difference between experimentation and production ML;
-- technical debt created by fast-moving ML frameworks;
-- how I would modernize an older ML asset into a governed, deployable service.
+The new `src/` implementation addresses the reproducibility and packaging issues while preserving the original work for comparison.
+
+## Evaluation philosophy
+
+For this problem, the modernized version treats **macro-F1 and per-class performance** as first-class metrics because overall accuracy can obscure poor performance on minority classes.
+
+The training script writes evaluation results to:
+
+```text
+artifacts/metrics.json
+```
+
+and the trained pipeline to:
+
+```text
+artifacts/stance_pipeline.joblib
+```
+
+Both are generated locally; the trained binary artifact is intentionally not committed.
+
+## Portfolio site
+
+A static showcase is included at **`docs/index.html`** and a GitHub Pages deployment workflow is included in **`.github/workflows/pages.yml`**. After Pages is enabled for the repository using GitHub Actions as the source, pushes to `master` deploy the site without a paid hosting service.
+
+## Interview discussion points
+
+This project supports discussion about:
+
+- converting raw text into ML-ready features;
+- establishing and defending a baseline;
+- comparing linear, ensemble, and neural approaches;
+- class imbalance and metric selection;
+- reproducibility and ML technical debt;
+- the difference between a notebook experiment and a deployable ML product;
+- modernizing a legacy AI asset without obscuring its history;
+- delivering a working AI demonstration without cloud cost or vendor lock-in.
 
 ## Historical context
 
-The original code and notebooks were produced in **2020** as part of the Saturdays AI Monterrey program. The portfolio documentation added in **2026** does not change the historical implementation; it makes the project easier to evaluate and explains how I would evolve it using current engineering practices.
+The original code and notebooks were produced in **2020** as part of the Saturdays AI Monterrey program. The portfolio and engineering additions were created in **2026** and are clearly separated from the historical implementation.
 
----
+See:
 
-### Related portfolio theme
-
-This repository represents the **classical ML/NLP foundation** of my AI portfolio. My newer projects extend that foundation toward GenAI, RAG, AI agents, governance, and enterprise AI delivery.
+- [Modernization roadmap](docs/modernization-roadmap.md)
+- [Model card](docs/model-card.md)
+- [Static portfolio page](docs/index.html)
