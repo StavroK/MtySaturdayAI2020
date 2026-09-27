@@ -50,7 +50,7 @@ def load_dataset(stances_path: str | Path, bodies_path: str | Path) -> pd.DataFr
     return df
 
 
-def build_pipeline(max_features: int = 5000) -> Pipeline:
+def build_pipeline(max_features: int = 5000, min_df: int = 2, max_df: float = 0.98) -> Pipeline:
     """Build the modernized classical-NLP baseline."""
     return Pipeline(
         steps=[
@@ -59,8 +59,8 @@ def build_pipeline(max_features: int = 5000) -> Pipeline:
                 TfidfVectorizer(
                     lowercase=True,
                     ngram_range=(1, 2),
-                    min_df=2,
-                    max_df=0.98,
+                    min_df=min_df,
+                    max_df=max_df,
                     max_features=max_features,
                     sublinear_tf=True,
                 ),
