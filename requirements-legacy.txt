@@ -1,0 +1,10 @@
+# Historical environment reference only — not guaranteed to reproduce the 2020 notebooks.
+# Prefer creating a modern environment as described in docs/modernization-roadmap.md.
+
+numpy
+pandas
+scikit-learn
+nltk
+matplotlib
+seaborn
+jupyter
