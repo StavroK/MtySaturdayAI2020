@@ -2,6 +2,8 @@
 
 This document separates the **historical 2020 project** from a recommended modern implementation.
 
+The modernization goal is intentionally **cloud-agnostic and free to run**. The project should remain usable by recruiters, students, and interviewers without requiring paid infrastructure, cloud credits, or proprietary services.
+
 ## 1. Reproducibility
 
 - Move raw data to `data/raw/` and derived data to `data/processed/`.
@@ -51,12 +53,14 @@ Add:
 Replace the TensorFlow 1.x MLP with current Keras or PyTorch.
 
 ### Modern NLP comparison
-Add a compact transformer classifier and compare it with the TF-IDF baseline on:
+Optionally add a compact open-source transformer classifier and compare it with the TF-IDF baseline on:
 - quality;
 - latency;
 - training cost;
 - inference cost;
 - operational complexity.
+
+The transformer should remain optional so the core demo can still run locally and at no cost.
 
 ## 5. Model governance
 
@@ -69,9 +73,25 @@ Add:
 - reproducibility metadata;
 - experiment log.
 
-## 6. Serving
+## 6. Local inference
 
-Expose inference through a small API:
+The preferred architecture is local-first:
+
+```text
+User Input
+   ↓
+Browser UI or local Python app
+   ↓
+Saved TF-IDF pipeline
+   ↓
+Saved classifier
+   ↓
+Prediction + confidence
+```
+
+No external API key should be required for the core demo.
+
+A simple local endpoint could expose:
 
 ```text
 POST /predict
@@ -89,6 +109,8 @@ Return:
 
 ## 7. CI/CD
 
+Use GitHub Actions so the public repository can validate itself at no hosting cost.
+
 On every pull request:
 
 - lint Python;
@@ -97,13 +119,50 @@ On every pull request:
 - validate the model package can load;
 - validate example request/response schemas.
 
-## 8. Portfolio demo
+## 8. Zero-cost portfolio demo
 
-A lightweight demo should allow an interviewer to paste a headline and article body, then show:
+The showcase should avoid requiring AWS, Azure, GCP, or another paid cloud service.
 
-- predicted stance;
-- confidence by class;
-- key TF-IDF terms for the linear baseline;
-- side-by-side output from classical and transformer models.
+Preferred options:
 
-This would transform the repository from a notebook archive into a small, reviewable ML product while preserving the historical project.
+### Option A — GitHub Pages static showcase
+Use GitHub Pages for:
+- project explanation;
+- architecture;
+- model comparison;
+- sample predictions;
+- evaluation charts;
+- interactive examples that do not require a backend.
+
+This is the most durable portfolio option.
+
+### Option B — Local interactive demo
+Provide one-command startup:
+
+```bash
+python app.py
+```
+
+or:
+
+```bash
+streamlit run app.py
+```
+
+The interviewer can run the model locally using the repository's included artifacts.
+
+### Option C — Browser-only inference
+If the final classical model is small enough, export the logic so inference can run entirely in the browser. This would allow GitHub Pages to provide a genuinely interactive demo with no backend and no infrastructure cost.
+
+## 9. Interview experience
+
+An interviewer should be able to:
+
+1. open the repository;
+2. understand the problem in under two minutes;
+3. inspect model results;
+4. run the project locally without credentials;
+5. optionally use a browser demo;
+6. understand the modernization decisions.
+
+This turns the repository from a notebook archive into a small, reviewable ML product while preserving the original historical project and keeping the operating cost at **$0**.
