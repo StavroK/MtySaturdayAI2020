@@ -18,8 +18,8 @@ This is a **stance-classification** task, not automated fact checking. A predict
 ## Run the modernized demo for free
 
 ```bash
-git clone https://github.com/StavroK/MtySaturdayAI2020.git
-cd MtySaturdayAI2020
+git clone https://github.com/StavroK/news-stance-detection.git
+cd news-stance-detection
 pip install -r requirements.txt
 streamlit run app.py
 ```
