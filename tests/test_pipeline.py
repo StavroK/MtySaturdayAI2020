@@ -30,7 +30,7 @@ def test_pipeline_can_fit_and_predict_toy_data():
         "unrelated",
     ]
 
-    model = build_pipeline(max_features=100)
+    model = build_pipeline(max_features=100, min_df=1, max_df=1.0)
     model.fit(x, y)
     pred = model.predict(["HEADLINE: cats are mammals ARTICLE: cats are mammals"])
     assert pred[0] in {"agree", "disagree", "discuss", "unrelated"}
